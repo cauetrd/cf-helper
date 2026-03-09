@@ -19,8 +19,8 @@ It automatically extracts sample tests from the downloaded contest page, generat
 - Adjust paths and other configurations on the config.txt file
 - When the contest starts:
   - Download the complete problem page e.g. (https://codeforces.com/contest/2205/problems) to the location you defined in config
-  - Run `setup.py`
-  - If the mode is set to `MULTIFILE`, a copy of your template will be created for each problem should be created in the dir you defined in config
+  - Run `cf.py`
+  - If the mode is set to `MULTIFILE`, a copy of your template will be created for each problem in the dir you defined in config
   - If the mode is set to `SINGLEFILE`, it is expected that all solutions will be written on a single file specified in config
   - When testing samples, run `runsamples.sh X` to test problem X
   - Depending on the mode, X.cpp or singlefile.cpp will be compiled with the flags set on config to `/run`
@@ -32,10 +32,11 @@ It automatically extracts sample tests from the downloaded contest page, generat
 - `alias gen='python Your/Absolute/Path/cf.py'`
 - `alias rs='Your/Absolute/Path/runsamples.sh'`
 
-Or something like that. These are recommended for even praticity
+Or something like that. These are recommended for even more practicality
 
 # Requirements
 
+- Unix Environment
 - Python 3
 - `beautifulsoup4`
 
