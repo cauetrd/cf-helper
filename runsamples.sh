@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # load config
-set -a
-source config.txt
-set +a
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+set -a
+source "$SCRIPT_DIR/config.txt"
+set +a
 PROB=$1
 
 if [ -z "$PROB" ]; then
@@ -44,7 +46,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # run sample
-./program < "$INPUT_OUTPUT_DIR/in$PROB.txt" > output.txt
+./run < "$INPUT_OUTPUT_DIR/in$PROB.txt" > output.txt
 
 # compare
 if diff -q output.txt "$INPUT_OUTPUT_DIR/out$PROB.txt" >/dev/null; then

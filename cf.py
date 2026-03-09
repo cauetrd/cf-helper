@@ -17,8 +17,8 @@ def load_config(path="config.txt"):
             config[k.strip()] = v.strip()
     return config
 
-
-cfg = load_config()
+script_dir = os.path.dirname(os.path.abspath(__file__))
+cfg = load_config(os.path.join(script_dir, "config.txt"))
 
 html_path = cfg.get("HTML_PATH", "Problems - Codeforces.html")
 template_path = cfg.get("TEMPLATE_PATH", "template.cpp")
