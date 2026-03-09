@@ -1,12 +1,46 @@
 from bs4 import BeautifulSoup
 import re
 from collections import defaultdict
+import os
 
-html = open("Problems - Codeforces.html", encoding="utf8").read()
+def load_config(path="config.txt"):
+    config = {}
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            k, v = line.split("=", 1)
+
+            if (v.startswith('"') and v.endswith('"')) or (v.startswith("'") and v.endswith("'")):
+                v = v[1:-1]
+            config[k.strip()] = v.strip()
+    return config
+
+
+cfg = load_config()
+
+html_path = cfg.get("HTML_PATH", "Problems - Codeforces.html")
+template_path = cfg.get("TEMPLATE_PATH", "template.cpp")
+output_dir = cfg.get("OUTPUT_DIR", ".")
+mode = cfg.get("MODE")
+
+if mode == "MULTIFILE":
+    print("Mode: MULTIFILE")
+else:
+    print("Mode: SINGLEFILE")
+print("Generating test cases.")
+
+html = open(html_path, encoding="utf8").read()
 soup = BeautifulSoup(html, "html.parser")
 
 problems = soup.select(".problemindexholder")
 smooth = True
+template = open(template_path).read()
+
+inputspath = "ins_outs"
+
+os.makedirs(inputspath, exist_ok=True)
 
 for prob in problems:
     idx = prob.get("problemindex")
@@ -15,12 +49,14 @@ for prob in problems:
         print("ERROR: problem without index")
         continue
 
+    if mode == "MULTIFILE":
+        open(os.path.join(output_dir, f"{idx}.cpp"), "w").write(template)
+
     sample = prob.select_one(".sample-test")
     if not sample:
         print(f"ERROR: problem {idx} has no sample tests")
         continue
 
-    # ---------- INPUT ----------
     inputs = defaultdict(list)
 
     for line in sample.select(".input .test-example-line"):
@@ -42,11 +78,10 @@ for prob in problems:
         print(f"ERROR: problem {idx} input parsing failed")
         continue
 
-    full_input = "\n".join(sum([inputs[i] for i in sorted(inputs)], []))
+    full_input = "\n".join(
+        line for i in sorted(inputs) for line in inputs[i]
+    )
 
-
-
-    # ---------- OUTPUT ----------
     out_pre = sample.select_one(".output pre")
     if not out_pre:
         print(f"ERROR: problem {idx} missing output sample")
@@ -54,15 +89,13 @@ for prob in problems:
 
     output = out_pre.get_text("\n", strip=True)
 
-
-
-    # ---------- WRITE FILES ----------
     try:
-        with open(f"in{idx}.txt", "w") as f:
+        with open(os.path.join(inputspath, f"in{idx}.txt"), "w") as f:
             f.write(full_input + "\n")
 
-        with open(f"out{idx}.txt", "w") as f:
+        with open(os.path.join(inputspath, f"out{idx}.txt"), "w") as f:
             f.write(output + "\n")
+
     except Exception as e:
         smooth = False
         print(f"ERROR: writing files for problem {idx}: {e}")
