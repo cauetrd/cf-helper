@@ -5,7 +5,7 @@ It automatically extracts sample tests from the downloaded contest page, generat
 
 ## Features
 
-- Parse downloaded Codeforces contest HTML and extract sample tests
+- Parses downloaded Codeforces contest HTML and extracts sample tests
 - If wanted, creates a X.cpp file for each problem
 - Can also run based on a single solution file if prefered
 - Configurable paths and compiler options
