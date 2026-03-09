@@ -1,0 +1,6 @@
+HTML_PATH="Problems - Codeforces.html"
+TEMPLATE_PATH=template.cpp
+PROBLEMS_DIR=/competitive-programming/
+MODE=MULTIFILE
+SINGLEFILE_PATH=/competitive-programming/codeforces.cpp
+COMPILER_FLAGS="g++ -std=c++17"
